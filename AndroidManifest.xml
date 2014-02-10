@@ -111,12 +111,6 @@
                       android:readPermission="android.permission.READ_CONTACTS"
                       android:writePermission="android.permission.WRITE_CONTACTS" />
 
-<!--
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
--->
-
         <!-- Workaround for non saved phone number -->
         <receiver android:name=".MyPhoneNumber">
             <intent-filter>

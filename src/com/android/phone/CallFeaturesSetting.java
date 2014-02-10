@@ -29,6 +29,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
@@ -72,9 +73,6 @@ import com.android.internal.telephony.PhoneConstants;
 import com.android.internal.telephony.cdma.TtyIntent;
 import com.android.internal.telephony.util.BlacklistUtils;
 import com.android.phone.sip.SipSharedPreferences;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -2100,9 +2098,8 @@ public class CallFeaturesSetting extends PreferenceActivity
         String[] rEntryValues = getApplicationContext().getResources()
                 .getStringArray(R.array.reverse_lookup_providers);
 
-        if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(
-                getApplicationContext()) != ConnectionResult.SUCCESS) {
-            if (DBG) log("Google Play Services is NOT available");
+        if (isGmsInstalled(getApplicationContext())) {
+            if (DBG) log("Google Play Services is NOT installed");
 
             List<String> listRNames = new ArrayList<String>(
                     Arrays.asList(rEntries));
@@ -2171,6 +2168,17 @@ public class CallFeaturesSetting extends PreferenceActivity
                     Settings.System.REVERSE_LOOKUP_PROVIDER,
                     newValue);
         }
+    }
+
+    private static boolean isGmsInstalled(Context context) {
+        PackageManager pm = context.getPackageManager();
+        List<PackageInfo> packages = pm.getInstalledPackages(0);
+        for (PackageInfo info : packages) {
+            if (info.packageName.equals("com.google.android.gms")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
